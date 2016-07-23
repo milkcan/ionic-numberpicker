@@ -41,6 +41,7 @@ $scope.numberPickerObject = {
     decimalStep: 0.25,  //Optional
     format: "DECIMAL",  //Optional - "WHOLE" or "DECIMAL"
     unit: "",  //Optional - "m", "kg", "℃" or whatever you want
+    useNgTouch: false,  //Optional - set true in conjunction with using ngTouch (see below)
     titleLabel: 'Number Picker',  //Optional
     setLabel: 'Set',  //Optional
     closeLabel: 'Close',  //Optional
@@ -65,6 +66,8 @@ $scope.numberPickerObject = {
     <b>{{ weight }} {{ weightType }}</b>
 </div>
 ````
+
+6) (optional) Install 'ngTouch' by https://github.com/nglar/ngTouch to get (pseudo-)autorepeat increment/decrement feature on touch panels. Also, remember to set useNgTouch to true.
 
 ##Versions:
 

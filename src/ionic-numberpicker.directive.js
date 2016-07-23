@@ -32,9 +32,11 @@
         scope.setButtonType = scope.inputObj.setButtonType ? scope.inputObj.setButtonType : 'button-positive';
         scope.closeButtonType = scope.inputObj.closeButtonType ? scope.inputObj.closeButtonType : 'button-stable';
 
+        scope.useNgTouch = scope.inputObj.useNgTouch ? scope.inputObj.useNgTouch : false;
         scope.wholeNumber = 0;
         scope.decimalNumber = 0;
         scope.isNegative = false;
+        scope.sign = '';
         scope.numericValue = Number(scope.wholeNumber + '.' + scope.decimalNumber);
 
         //Changing the style
@@ -48,6 +50,14 @@
           return sValue.substring(index + 1);
         }
 
+        scope.updateDisplay = function() {
+          document.getElementById("wholeNumber").innerHTML = scope.wholeNumber;
+          if (document.getElementById("decimalNumber")) {
+            document.getElementById("decimalNumber").innerHTML = scope.decimalDisplay();
+          }
+          document.getElementById("sign").innerHTML = scope.sign;
+        };
+
         //Increasing the whole number
         scope.increaseWhole = function () {
           scope.numericValue += 1;
@@ -55,6 +65,7 @@
           scope.decimalNumber = strip(scope.numericValue % 1);
 
           scope.checkMax();
+          scope.updateDisplay();
         };
 
         //Decreasing the whole number
@@ -64,6 +75,7 @@
           scope.decimalNumber = strip(scope.numericValue % 1);
 
           scope.checkMin();
+          scope.updateDisplay();
         };
 
         //Increasing the decimal number
@@ -73,6 +85,7 @@
           scope.decimalNumber = strip(scope.numericValue % 1);
 
           scope.checkMax();
+          scope.updateDisplay();
         };
 
         //Decreasing the decimal number
@@ -82,6 +95,71 @@
           scope.decimalNumber = strip(scope.numericValue % 1);
 
           scope.checkMin();
+          scope.updateDisplay();
+        };
+
+        scope.startWholeUp = function(d) {
+         if ((scope.useNgTouch && d == 'touch') || (!scope.useNgTouch && d == 'mouse')) {
+            scope.increaseWhole();
+            scope.timeoutUpID = setTimeout(function() {
+              scope.intervalUpID = setInterval(function(){
+                scope.increaseWhole();
+              }, 100)
+            }, 600)
+          }
+        };
+
+        scope.stopWholeUp = function() {
+          clearInterval(scope.intervalUpID);
+          clearTimeout(scope.timeoutUpID);
+        };
+
+        scope.startWholeDown = function(d) {
+         if ((scope.useNgTouch && d == 'touch') || (!scope.useNgTouch && d == 'mouse')) {
+            scope.decreaseWhole();
+            scope.timeoutDownID = setTimeout(function() {
+              scope.intervalDownID = setInterval(function(){
+                scope.decreaseWhole();
+              }, 100)
+            }, 600)
+          }
+        };
+
+        scope.stopWholeDown = function() {
+          clearInterval(scope.intervalDownID);
+          clearTimeout(scope.timeoutDownID);
+        };
+
+        scope.startDecimalUp = function(d) {
+         if ((scope.useNgTouch && d == 'touch') || (!scope.useNgTouch && d == 'mouse')) {
+            scope.increaseDecimal();
+            scope.timeoutUpID = setTimeout(function() {
+              scope.intervalUpID = setInterval(function(){
+                scope.increaseDecimal();
+              }, 100)
+            }, 600)
+          }
+        };
+
+        scope.stopDecimalUp = function() {
+          clearInterval(scope.intervalUpID);
+          clearTimeout(scope.timeoutUpID);
+        };
+
+        scope.startDecimalDown = function(d) {
+         if ((scope.useNgTouch && d == 'touch') || (!scope.useNgTouch && d == 'mouse')) {
+            scope.decreaseDecimal();
+            scope.timeoutDownID = setTimeout(function() {
+              scope.intervalDownID = setInterval(function(){
+                scope.decreaseDecimal();
+              }, 100)
+            }, 600)
+          }
+        };
+
+        scope.stopDecimalDown = function() {
+          clearInterval(scope.intervalDownID);
+          clearTimeout(scope.timeoutDownID);
         };
 
         function strip(number, precision) {
@@ -94,9 +172,11 @@
 
           if (number >= 0) {
             scope.isNegative = false;
+            scope.sign = '';
             returnVal = Math.floor(number);
           } else {
             scope.isNegative = true;
+            scope.sign = '-';
             returnVal = Math.ceil(number);
           }
 
@@ -125,6 +205,9 @@
         element.on("click", function () {
           if (scope.format == 'DECIMAL') {
 
+            //Reflect currentmost value (when the dialog opened twice)
+            scope.inputValue = scope.inputObj.inputValue ? scope.inputObj.inputValue : 0;
+
             //Get Values from Initial Number
             scope.wholeNumber = findWholeNumber(Number(scope.inputValue));
             scope.decimalNumber = scope.inputValue % 1;
@@ -150,7 +233,7 @@
                   onTap: function (e) {
                     scope.loadingContent = true;
         
-                    scope.numericValue = Number(scope.wholeNumber) + Number(strip(scope.decimalNumber, scope.precision));
+                    scope.numericValue = Number(scope.isNegative ? -scope.wholeNumber : scope.wholeNumber) + Number(strip(scope.decimalNumber, scope.precision));
                     scope.inputObj.callback(scope.numericValue);
                   }
                 }
@@ -158,6 +241,8 @@
             });
 
           } else {
+            //Reflect currentmost value (when the dialog opened twice)
+            scope.inputValue = scope.inputObj.inputValue ? scope.inputObj.inputValue : 0;
             //Get Values from Initial Number
             scope.wholeNumber = findWholeNumber(scope.inputValue);
             scope.decimalNumber = 0;
@@ -182,7 +267,7 @@
                   onTap: function (e) {
                     scope.loadingContent = true;
 
-                    scope.inputObj.callback(scope.wholeNumber);
+                    scope.inputObj.callback(scope.isNegative ? -scope.wholeNumber : scope.wholeNumber);
                   }
                 }
               ]
