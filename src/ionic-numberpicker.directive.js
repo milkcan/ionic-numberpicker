@@ -31,7 +31,10 @@
         scope.decimalCharacter = scope.inputObj.decimalCharacter ? scope.inputObj.decimalCharacter : '.';
         scope.setButtonType = scope.inputObj.setButtonType ? scope.inputObj.setButtonType : 'button-positive';
         scope.closeButtonType = scope.inputObj.closeButtonType ? scope.inputObj.closeButtonType : 'button-stable';
-        scope.numberArray = scope.inputObj.numberArray || [];
+
+        if (scope.format === 'NUMBER_ARRAY') {
+          scope.numberArray = ('' + scope.inputValue).split('');
+        }
 
         scope.wholeNumber = 0;
         scope.decimalNumber = 0;
@@ -88,18 +91,14 @@
         //Increasing Array number
         scope.increaseNumber = function (item) {
           var number = scope.numberArray[item];
-          if (number < 9) {
-            number++;
-          }
+          if (number < 9) { number++; } else { number = 0; }
           scope.numberArray[item] = number;
         };
 
         //Decreasing the decimal number
         scope.decreaseNumber = function (item) {
           var number = scope.numberArray[item];
-          if (number > 0) {
-            number--;
-          }
+          if (number > 0) { number--; } else { number = 9; }
           scope.numberArray[item] = number;
         };
         
