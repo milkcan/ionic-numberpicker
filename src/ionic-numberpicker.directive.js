@@ -31,6 +31,7 @@
         scope.decimalCharacter = scope.inputObj.decimalCharacter ? scope.inputObj.decimalCharacter : '.';
         scope.setButtonType = scope.inputObj.setButtonType ? scope.inputObj.setButtonType : 'button-positive';
         scope.closeButtonType = scope.inputObj.closeButtonType ? scope.inputObj.closeButtonType : 'button-stable';
+        scope.numberArray = scope.inputObj.numberArray || [];
 
         scope.wholeNumber = 0;
         scope.decimalNumber = 0;
@@ -84,6 +85,34 @@
           scope.checkMin();
         };
 
+        //Increasing Array number
+        scope.increaseNumber = function (item) {
+          var number = scope.numberArray[item];
+          if (number < 9) {
+            number++;
+          }
+          scope.numberArray[item] = number;
+        };
+
+        //Decreasing the decimal number
+        scope.decreaseNumber = function (item) {
+          var number = scope.numberArray[item];
+          if (number > 0) {
+            number--;
+          }
+          scope.numberArray[item] = number;
+        };
+        
+        function buildFinalNumber() {
+          var finalNumber = '';
+          var len = scope.numberArray.length
+
+          for(var i = 0 ; i < scope.numberArray.length ; i++) {
+            finalNumber += '' + scope.numberArray[i];
+          }
+          return (finalNumber)
+        };
+        
         function strip(number, precision) {
           var returnVal = (parseFloat(number).toFixed(scope.precision));
           return returnVal;
@@ -157,7 +186,7 @@
               ]
             });
 
-          } else {
+          } else if (scope.format == 'WHOLE') {
             //Get Values from Initial Number
             scope.wholeNumber = findWholeNumber(scope.inputValue);
             scope.decimalNumber = 0;
@@ -187,6 +216,34 @@
                 }
               ]
             });
+            
+          } else {
+            
+            $ionicPopup.show({
+              templateUrl: 'ionic-numberpicker-array.html',
+              title: scope.titleLabel,
+              subTitle: '',
+              scope: scope,
+              buttons: [
+                {
+                  text: scope.closeLabel,
+                  type: scope.closeButtonType,
+                  onTap: function (e) {
+                    scope.inputObj.callback(undefined);
+                  }
+                },
+                {
+                  text: scope.setLabel,
+                  type: scope.setButtonType,
+                  onTap: function (e) {
+                    scope.loadingContent = true;
+
+                    scope.inputObj.callback(buildFinalNumber());
+                  }
+                }
+              ]
+            });
+          }
           }
         });
       }
