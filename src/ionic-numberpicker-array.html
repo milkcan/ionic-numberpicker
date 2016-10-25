@@ -1,8 +1,7 @@
 <div class="WholeNumberPickerChildDiv">
   <div class="row" >
-    <div class="col" ng-repeat="item in numberArray track by $index">
-      <label class="col col-offset-25 col-10 numberPickerWhole"> </label>
-      <span class="button-small col col-25">
+    <div class="col text-center" ng-repeat="item in numberArray track by $index">
+      <label class="numberPickerWhole"> </label>
         <button type="button" class="button button-clear button-small button-dark numberPickerArrows marginBottom10"
                 ng-click="increaseNumber($index)">
           <i class="icon ion-chevron-up"></i></button>
@@ -10,8 +9,7 @@
         <button type="button" class="button button-clear button-small button-dark numberPickerArrows marginTop10"
                 ng-click="decreaseNumber($index)">
           <i class="icon ion-chevron-down"></i></button>
-      </span>
-      <label class="col numberPickerDecimal">{{ unit }}</label>
+      <label class="numberPickerDecimal">{{ unit }}</label>
     </div>
   </div>
 </div>
