@@ -11,7 +11,10 @@
   "scripts": {},
   "author": "https://github.com/milkcan, matt@milkcan.io",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "del": "^2.2.2",
+    "gulp": "^3.9.1"
+  },
   "devDependencies": {
     "del": "^2.0.2",
     "gulp": "^3.9.0",
